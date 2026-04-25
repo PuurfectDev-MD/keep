@@ -24,6 +24,7 @@
 			<a href="/">Home</a>
 			<a href="/memory">Memories</a>
 			<a href="/pictures">Pictures</a>
+			<a href="/journal">Journal</a>
 			<a href="/connect">Connect</a>
 		</div>
 

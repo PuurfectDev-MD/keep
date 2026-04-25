@@ -33,9 +33,11 @@
 
 		console.log(data.user.id + uploading);
 
+		let memoryId = crypto.randomUUID();
+
 		const filePaths: string[] = [];
 		for (const file of selectedFile) {
-			const filePath = `${data.user.id}/memory/${Date.now()}-${file.name}`;
+			const filePath = `${data.user.id}/memory/${memoryId}/${Date.now()}-${file.name}`;
 
 			const { error: fileUploadErr } = await supabase.storage
 				.from('memories')
@@ -52,7 +54,7 @@
 		const res = await fetch('/api/memory', {
 			method: 'POST',
 			headers: { 'Content-Type': 'application/json' },
-			body: JSON.stringify({ filePaths, title, description })
+			body: JSON.stringify({ filePaths, title, description, memoryId })
 		});
 
 		const result = await res.json();

@@ -20,3 +20,11 @@ export const memory = pgTable('memory', {
 	created_at: timestamp('created_at').defaultNow().notNull(),
 
 })
+
+
+export const voiceDaiary = pgTable('voiceDiary', {
+	id: uuid('id').primaryKey().notNull(),
+	audio: text('audio').notNull(),
+	userId: uuid('user_id').notNull().references(() => users.id),
+	created_at: timestamp('created_at').defaultNow().notNull(),
+})

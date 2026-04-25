@@ -6,9 +6,9 @@ export async function POST(event) {
     if (!session) return json({ error: "unauthorized" }, { status: 401 })
 
     const supabase = event.locals.supabase
-    const { filePaths, title, description } = await event.request.json()
+    const { filePaths, title, description, memoryId } = await event.request.json()
 
-    const memoryId = crypto.randomUUID()
+
     const userId = session.user.id
 
 
