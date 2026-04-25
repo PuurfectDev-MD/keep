@@ -17,7 +17,7 @@
 	}
 </script>
 
-{#if data.user?.id}
+{#if data.user}
 	<nav class="mt-5 grid w-screen grid-cols-3">
 		<div></div>
 		<div class="flex w-full flex-row justify-evenly">

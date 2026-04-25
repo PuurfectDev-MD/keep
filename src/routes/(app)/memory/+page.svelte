@@ -1,63 +1,132 @@
 <script lang="ts">
 	import { supabase } from '$lib/supabase.js';
+	import { PlusIcon, XIcon } from 'phosphor-svelte';
 
 	let { data } = $props();
 	let uploading = $state(false);
 	let errorMessage = $state('');
+	let newMemory = $state(false);
+	let preview = $state<string[]>([]);
+	let selectedFile = $state<File[]>([]);
 
-	let preview = $state<string | null>(null);
-	let selectedFile = $state<File | null>(null);
+	let title = $state('');
+	let description = $state('');
 
 	function handleImagePick(e: Event) {
 		const input = e.target as HTMLInputElement;
 		const file = input.files?.[0];
 		if (!file) return;
 
-		selectedFile = file;
-		preview = URL.createObjectURL(file);
+		selectedFile = [...selectedFile, file];
+		let previewUrl = URL.createObjectURL(file);
+		preview = [...preview, previewUrl];
 	}
 
-	async function handleImageUpload(e: Event) {
-		if (!selectedFile) return;
+	async function handleUpload(e: Event) {
+		if (!selectedFile.length) return;
+		if (!title) {
+			errorMessage = 'Insert a title to upload';
+			return;
+		}
 		uploading = true;
 		errorMessage = '';
 
 		console.log(data.user.id + uploading);
-		const { error: fileUploadErr } = await supabase.storage
-			.from('test')
-			.upload(`${Date.now()}-${selectedFile.name}`, selectedFile);
-		uploading = false;
 
-		if (fileUploadErr) {
-			errorMessage = fileUploadErr.message;
-			return;
+		const filePaths: string[] = [];
+		for (const file of selectedFile) {
+			const filePath = `${data.user.id}/memory/${Date.now()}-${file.name}`;
+
+			const { error: fileUploadErr } = await supabase.storage
+				.from('memories')
+				.upload(filePath, file); // uploads the url to the temp bucket
+
+			if (fileUploadErr) {
+				errorMessage = fileUploadErr.message;
+				uploading = false;
+				return;
+			}
+			filePaths.push(filePath);
 		}
-		preview = null;
-		selectedFile = null;
-		console.log('File has been uploaded succesfully');
+
+		const res = await fetch('/api/memory', {
+			method: 'POST',
+			headers: { 'Content-Type': 'application/json' },
+			body: JSON.stringify({ filePaths, title, description })
+		});
+
+		const result = await res.json();
+
+		if (!result.success) {
+			errorMessage = result.error ?? 'SomethSing went wrong';
+			uploading = false;
+			return;
+		} else {
+			preview = [];
+			selectedFile = [];
+			title = '';
+			description = '';
+			newMemory = false;
+		}
+		uploading = false;
 	}
 </script>
 
-<div class="m-4 flex h-[400px] justify-center bg-amber-600">
-	<input
-		class="h-full w-full"
-		type="file"
-		accept="image/png, image/jpeg"
-		disabled={uploading}
-		onchange={handleImagePick}
-	/>
-
-	{#if preview}
-		<img src={preview} alt="preview" class="h-full w-full object-cover" />
-	{:else}
-		<span class="text-white">Click to pick an image</span>
-	{/if}
+<div class="mt-8 flex justify-end bg-amber-300 px-4">
+	<button onclick={() => (newMemory = !newMemory)}><PlusIcon size={28}></PlusIcon></button>
 </div>
 
-{#if selectedFile}
-	<button onclick={handleImageUpload} disabled={uploading} class="cursor-pointer bg-red-200 p-2">
-		{uploading ? 'Uploading' : 'Upload'}
-	</button>
+{#if newMemory}
+	<div class="grid h-[280px] grid-cols-2 border-4 border-red-800 p-4 md:h-[400px]">
+		<div class="p-3">
+			<input
+				class="h-full w-full border-4 border-dashed bg-red-500 p-3"
+				type="file"
+				accept="image/png, image/jpeg"
+				disabled={uploading}
+				onchange={handleImagePick}
+			/>
+		</div>
+		<div class="flex flex-col bg-amber-400 p-3">
+			<label class="w-full p-3 text-amber-900">
+				Title:
+				<input bind:value={title} class="w-fit px-3" type="text" />
+			</label>
+			<textarea bind:value={description} class="h-fit flex-1"></textarea>
+		</div>
+	</div>
+
+	{#if preview}
+		<div class="w-screen flex-row justify-between">
+			<h1 class="text-4xl">Preview Panel</h1>
+		</div>
+		<div class="flex max-w-screen border-4 border-dashed p-3">
+			<div class="grid grid-cols-2">
+				<div class="px-3">
+					<h1>{title}</h1>
+					<p>{description}</p>
+				</div>
+				{#each preview as previewImg}
+					<div class="border-4 border-dashed px-3">
+						<button
+							class="flex cursor-pointer justify-end"
+							onclick={() => (preview = preview.filter((p) => p != previewImg))}
+							><XIcon size={32}></XIcon></button
+						>
+						<img src={previewImg} alt="preview" class="h-auto w-full object-cover" />
+					</div>
+				{/each}
+			</div>
+		</div>
+
+		{#if selectedFile}
+			<button onclick={handleUpload} disabled={uploading} class="cursor-pointer bg-red-200 p-2">
+				{uploading ? 'Uploading' : 'Upload'}
+			</button>
+		{/if}
+	{:else}
+		<span class="text-white">Upload for preview</span>
+	{/if}
 {/if}
 
 {#if uploading}
@@ -72,7 +141,13 @@
 {/if}
 
 {#if errorMessage}
-	<div class="absolute top-5 right-5">
+	<div class="absolute top-5 right-5 h-[100px] bg-blue-400">
 		<p>{errorMessage}</p>
 	</div>
 {/if}
+
+<div class="max-w-screen bg-blue-400">
+	<div class="p-3">
+		<h1 class="text-3xl">Your memories</h1>
+	</div>
+</div>
