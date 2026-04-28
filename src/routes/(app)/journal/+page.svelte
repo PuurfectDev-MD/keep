@@ -25,7 +25,7 @@
 
 		let voiceDiaryId = crypto.randomUUID();
 
-		const filePath = `${data.user.id}/voice/${voiceDiaryId}/${Date.now()}-${selectedFile.name}`;
+		const filePath = `${data.user.id}/${voiceDiaryId}/${Date.now()}-${selectedFile.name}`;
 
 		const { error: soundUploadErr } = await supabase.storage
 			.from('voiceDiary')
