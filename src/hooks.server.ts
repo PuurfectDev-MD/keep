@@ -20,7 +20,7 @@ export const handle: Handle = async ({ event, resolve }) => {
     event.locals.user = session?.user ?? null
 
 
-    const theme = event.cookies.get('user-theme') || 'blueprint';
+    const theme = event.cookies.get('data-theme') || 'light';
 
     return resolve(event, {
         transformPageChunk: ({ html }) =>

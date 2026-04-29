@@ -1,5 +1,7 @@
-export function load({ locals }) {
+export function load({ locals, cookies }) {
+    const theme = cookies.get('data-theme') || 'light'
     return {
-        user: locals.user
+        user: locals.user,
+        theme: theme
     }
 }

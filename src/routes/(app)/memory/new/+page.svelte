@@ -5,7 +5,7 @@
 	let { data } = $props();
 	let uploading = $state(false);
 	let errorMessage = $state('');
-	let newMemory = $state(false);
+
 	let preview = $state<string[]>([]);
 	let selectedFile = $state<File[]>([]);
 
@@ -68,67 +68,60 @@
 			selectedFile = [];
 			title = '';
 			description = '';
-			newMemory = false;
 		}
 		uploading = false;
 	}
 </script>
 
-<div class="mt-8 flex justify-end bg-amber-300 px-4">
-	<button onclick={() => (newMemory = !newMemory)}><PlusIcon size={28}></PlusIcon></button>
+<div class="grid h-[280px] grid-cols-2 border-4 border-red-800 p-4 md:h-[400px]">
+	<div class="p-3">
+		<input
+			class="h-full w-full border-4 border-dashed bg-red-500 p-3"
+			type="file"
+			accept="image/png, image/jpeg"
+			disabled={uploading}
+			onchange={handleImagePick}
+		/>
+	</div>
+	<div class="flex flex-col bg-amber-400 p-3">
+		<label class="w-full p-3 text-amber-900">
+			Title:
+			<input bind:value={title} class="w-fit px-3" type="text" />
+		</label>
+		<textarea bind:value={description} class="h-fit flex-1"></textarea>
+	</div>
 </div>
 
-{#if newMemory}
-	<div class="grid h-[280px] grid-cols-2 border-4 border-red-800 p-4 md:h-[400px]">
-		<div class="p-3">
-			<input
-				class="h-full w-full border-4 border-dashed bg-red-500 p-3"
-				type="file"
-				accept="image/png, image/jpeg"
-				disabled={uploading}
-				onchange={handleImagePick}
-			/>
-		</div>
-		<div class="flex flex-col bg-amber-400 p-3">
-			<label class="w-full p-3 text-amber-900">
-				Title:
-				<input bind:value={title} class="w-fit px-3" type="text" />
-			</label>
-			<textarea bind:value={description} class="h-fit flex-1"></textarea>
+{#if preview}
+	<div class="w-screen flex-row justify-between">
+		<h1 class="text-4xl">Preview Panel</h1>
+	</div>
+	<div class="flex max-w-screen border-4 border-dashed p-3">
+		<div class="grid grid-cols-2">
+			<div class="px-3">
+				<h1>{title}</h1>
+				<p>{description}</p>
+			</div>
+			{#each preview as previewImg}
+				<div class="border-4 border-dashed px-3">
+					<button
+						class="flex cursor-pointer justify-end"
+						onclick={() => (preview = preview.filter((p) => p != previewImg))}
+						><XIcon size={32}></XIcon></button
+					>
+					<img src={previewImg} alt="preview" class="h-auto w-full object-cover" />
+				</div>
+			{/each}
 		</div>
 	</div>
 
-	{#if preview}
-		<div class="w-screen flex-row justify-between">
-			<h1 class="text-4xl">Preview Panel</h1>
-		</div>
-		<div class="flex max-w-screen border-4 border-dashed p-3">
-			<div class="grid grid-cols-2">
-				<div class="px-3">
-					<h1>{title}</h1>
-					<p>{description}</p>
-				</div>
-				{#each preview as previewImg}
-					<div class="border-4 border-dashed px-3">
-						<button
-							class="flex cursor-pointer justify-end"
-							onclick={() => (preview = preview.filter((p) => p != previewImg))}
-							><XIcon size={32}></XIcon></button
-						>
-						<img src={previewImg} alt="preview" class="h-auto w-full object-cover" />
-					</div>
-				{/each}
-			</div>
-		</div>
-
-		{#if selectedFile}
-			<button onclick={handleUpload} disabled={uploading} class="cursor-pointer bg-red-200 p-2">
-				{uploading ? 'Uploading' : 'Upload'}
-			</button>
-		{/if}
-	{:else}
-		<span class="text-white">Upload for preview</span>
+	{#if selectedFile}
+		<button onclick={handleUpload} disabled={uploading} class="cursor-pointer bg-red-200 p-2">
+			{uploading ? 'Uploading' : 'Upload'}
+		</button>
 	{/if}
+{:else}
+	<span class="text-white">Upload for preview</span>
 {/if}
 
 {#if uploading}
