@@ -70,8 +70,8 @@
 
 			<div class="nav-links grid grid-rows-1 gap-y-5 px-6 py-3">
 				<a href="/">Dashboard</a>
-				<a href="/memory">Memories</a>
-				<a href="/logs">Voice</a>
+				<a href="/memory/new">Memories</a>
+				<a href="/voice">Voice</a>
 				<a href="/calendar">Calendar</a>
 				<a href="/timeline">Timeline</a>
 				<a href="/setting">Settings</a>

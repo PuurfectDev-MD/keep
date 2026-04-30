@@ -73,56 +73,62 @@
 	}
 </script>
 
-<div class="grid h-[280px] grid-cols-2 border-4 border-red-800 p-4 md:h-[400px]">
-	<div class="p-3">
-		<input
-			class="h-full w-full border-4 border-dashed bg-red-500 p-3"
-			type="file"
-			accept="image/png, image/jpeg"
-			disabled={uploading}
-			onchange={handleImagePick}
-		/>
-	</div>
-	<div class="flex flex-col bg-amber-400 p-3">
-		<label class="w-full p-3 text-amber-900">
-			Title:
-			<input bind:value={title} class="w-fit px-3" type="text" />
-		</label>
-		<textarea bind:value={description} class="h-fit flex-1"></textarea>
-	</div>
+<div class="flex w-fit justify-start">
+	<h2 class="px-3">Add your</h2>
+	<h2 class="font-[var(--font-ui)]! text-[var(--color-accent)]!">Memory</h2>
 </div>
 
-{#if preview}
-	<div class="w-screen flex-row justify-between">
-		<h1 class="text-4xl">Preview Panel</h1>
-	</div>
-	<div class="flex max-w-screen border-4 border-dashed p-3">
-		<div class="grid grid-cols-2">
-			<div class="px-3">
-				<h1>{title}</h1>
-				<p>{description}</p>
-			</div>
-			{#each preview as previewImg}
-				<div class="border-4 border-dashed px-3">
-					<button
-						class="flex cursor-pointer justify-end"
-						onclick={() => (preview = preview.filter((p) => p != previewImg))}
-						><XIcon size={32}></XIcon></button
-					>
-					<img src={previewImg} alt="preview" class="h-auto w-full object-cover" />
-				</div>
-			{/each}
+<div class="grid h-fit grid-cols-2 gap-x-4 pt-6">
+	<div class="flex flex-col justify-between">
+		<div class="card max-w- w-full">
+			<h4 class="pt-4">Photos and videos</h4>
+			<hr />
+			<input
+				class="h-48 max-h-100 w-full border-2 border-dashed border-[var(--color-border)]"
+				type="file"
+				accept="image/png, image/jpeg"
+				disabled={uploading}
+				onchange={handleImagePick}
+			/>
+		</div>
+
+		<div class="card flex flex-col p-3">
+			<label class="w-full p-3 text-amber-900">
+				Title:
+				<input bind:value={title} class="w-fit px-3" type="text" />
+			</label>
+
+			<textarea bind:value={description} class="h-fit flex-1 border-2 border-[var(--color-border)]"
+			></textarea>
 		</div>
 	</div>
 
-	{#if selectedFile}
-		<button onclick={handleUpload} disabled={uploading} class="cursor-pointer bg-red-200 p-2">
-			{uploading ? 'Uploading' : 'Upload'}
-		</button>
-	{/if}
-{:else}
-	<span class="text-white">Upload for preview</span>
-{/if}
+	<div class="card w-full max-w-full">
+		<h4 class="pt-4">Preview</h4>
+		<hr />
+
+		<div class="flex max-w-screen p-3">
+			<div class="grid grid-cols-2">
+				{#each preview as previewImg}
+					<div class="border-4 border-dashed px-3">
+						<button
+							class="flex cursor-pointer justify-end"
+							onclick={() => (preview = preview.filter((p) => p != previewImg))}
+							><XIcon size={32}></XIcon></button
+						>
+						<img src={previewImg} alt="preview" class="h-auto w-full object-cover" />
+					</div>
+				{/each}
+			</div>
+		</div>
+
+		<div>
+			<button onclick={handleUpload} disabled={uploading} class="cursor-pointer bg-red-200 p-2">
+				{uploading ? 'Uploading' : 'Upload'}
+			</button>
+		</div>
+	</div>
+</div>
 
 {#if uploading}
 	<div class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">

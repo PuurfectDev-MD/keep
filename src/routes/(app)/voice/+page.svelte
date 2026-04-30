@@ -58,29 +58,51 @@
 	}
 </script>
 
-<h1 class="text-4xl">Your voice diary</h1>
+<div class="flex w-fit justify-start">
+	<h2 class="px-3">Add your</h2>
+	<h2 class="font-[var(--font-ui)]! text-[var(--color-accent)]!">Voice Log</h2>
+</div>
 
-<div class="flex max-h-[400px] p-4">
-	<input
-		class="border-4 border-dashed"
-		type="file"
-		accept="sound/wav, sound/mp3"
-		onchange={handleSoundInput}
-	/>
+<div class="grid h-fit grid-cols-2 gap-x-4 pt-6">
+	<div class="flex flex-col justify-between">
+		<div class="card max-w- w-full">
+			<h4 class="pt-4">Audio file</h4>
+			<hr />
+			<input
+				class="h-48 max-h-100 w-full border-2 border-dashed border-[var(--color-border)]"
+				type="file"
+				accept="sound/wav, sound/mp3"
+				onchange={handleSoundInput}
+			/>
+		</div>
+	</div>
 
-	{#if preview}
-		<div class="flex justify-end px-3">
-			<button class="cursor-pointer" onclick={() => ((selectedFile = null), (preview = ''))}
-				><XIcon size={32}></XIcon></button
-			>
+	<div class="card w-full max-w-full">
+		<h4 class="pt-4">Preview</h4>
+		<hr />
+
+		<div class="flex max-w-screen p-3">
+			{#if preview}
+				<div class="flex justify-end px-3">
+					<button class="cursor-pointer" onclick={() => ((selectedFile = null), (preview = ''))}
+						><XIcon size={32}></XIcon></button
+					>
+				</div>
+
+				<div class="flex flex-col gap-y-4 bg-orange-50">
+					<audio controls src={preview}></audio>
+				</div>
+			{/if}
 		</div>
 
-		<div class="flex flex-col gap-y-4 bg-orange-50">
-			<audio controls src={preview}></audio>
-
-			<button class="cursor-pointer" onclick={handleUpload}>Upload</button>
-		</div>
-	{/if}
+		{#if selectedFile}
+			<div>
+				<button onclick={handleUpload} disabled={uploading} class="cursor-pointer bg-red-200 p-2">
+					{uploading ? 'Uploading' : 'Upload'}
+				</button>
+			</div>
+		{/if}
+	</div>
 </div>
 
 {#if uploading}

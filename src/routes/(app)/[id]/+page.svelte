@@ -61,6 +61,7 @@
 					{#if voice.type == 'success'}
 						<div class="card flex flex-col justify-between p-2">
 							<audio src={voice.audioUrl} controls></audio>
+							<p class="px-3">{voice.date.split('T')[0]}</p>
 						</div>
 					{/if}
 				{/each}
