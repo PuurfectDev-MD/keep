@@ -31,19 +31,19 @@
 	}
 </script>
 
-<div class="flex max-h-[64px] w-screen justify-between bg-[var(--color-bg)] p-4">
-	<h1 class="px-2 text-[var(--color-text)]">Keep</h1>
-	<h3 class="px-4">Friday 27, 2026</h3>
+<div class="flex h-full max-h-[84px] w-full justify-between bg-[var(--color-nav-top-bg)] p-4">
+	<h3 class="px-2 text-white!">Keep</h3>
+	<h3 class="px-4 text-[var(--color-text-muted)]!">Friday 27, 2026</h3>
 </div>
 
 {#if data.user}
 	<div class="flex">
 		<nav
-			class="sticky top-0 flex h-[calc(100vh-55px)] max-w-[300px] flex-col justify-evenly bg-[var(--nav-active-bg)]"
+			class="sticky top-0 flex h-screen max-w-[300px] flex-col justify-evenly bg-[var(--color-nav-side-bg)]"
 		>
 			<div class="w-full p-6">
 				<div class="relative flex justify-between">
-					<h1 class="text-xl">Good morning,</h1>
+					<h3 class="text-xl">Good morning,</h3>
 					<div class="flex h-fit w-fit flex-col justify-end gap-y-8">
 						<button onclick={() => (userOptionsTab = !userOptionsTab)}
 							><DotsThreeOutlineVerticalIcon size={26}></DotsThreeOutlineVerticalIcon></button
@@ -62,9 +62,9 @@
 					</div>
 				</div>
 
-				<h1>{data.user.email}</h1>
+				<p>{data.user.email}</p>
 				<div class="flex justify-start pt-4">
-					<h4 class="w-fit bg-[var(--color-accent)] px-3 py-2 text-white">Wednesday</h4>
+					<p class="w-fit bg-[var(--color-accent)] px-3 py-2 text-white">Wednesday</p>
 				</div>
 			</div>
 
@@ -77,7 +77,7 @@
 				<a href="/setting">Settings</a>
 			</div>
 
-			<div class="theme-selector p-4">
+			<div class="theme-selector mb-8 p-4">
 				<select
 					bind:value={theme}
 					onchange={(e) => {
@@ -95,42 +95,6 @@
 			{@render children()}
 		</main>
 	</div>
-	<!-- <nav class="mt-5 grid w-screen grid-cols-3">
-		<div></div>
-		<div class="flex w-full flex-row justify-evenly">
-			<a href="/">Home</a>
-			<a href="/memory">Memories</a>
-			<a href="/logs">Logs</a>
-			<a href="/calendar">Calendar</a>
-
-			<a href="/connect">Connect</a>
-		</div>
-
-		<div class="absolute right-5">
-			<button class="bg-amber-400 p-2" onclick={() => (userOptionsTab = !userOptionsTab)}
-				>User</button
-			>
-			{#if userOptionsTab}
-				<div
-					class="flex flex-col gap-y-4 bg-amber-200 py-4"
-					onmouseleave={() => (userOptionsTab = !userOptionsTab)}
-				>
-					<a onclick={logoutUser} class="cursor-pointer py-2">Logout</a>
-				</div>
-			{/if}
-		</div>
-
-		<select
-			bind:value={theme}
-			onchange={(e) => {
-				saveTheme(e.currentTarget.value);
-			}}
-		>
-			{#each themes as t}
-				<option value={t}>{t}</option>
-			{/each}
-		</select>
-	</nav> -->
 {/if}
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
