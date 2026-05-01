@@ -28,3 +28,12 @@ export const voiceDaiary = pgTable('voiceDiary', {
 	userId: uuid('user_id').notNull().references(() => users.id),
 	created_at: timestamp('created_at').defaultNow().notNull(),
 })
+
+
+export const deviceKeys = pgTable('device_keys', {
+	id: uuid('id').primaryKey().defaultRandom().notNull(),
+	userId: uuid('user_id').notNull().unique().references(() => users.id, { onDelete: 'cascade' }),
+	rawKey: text('raw_key').notNull().unique(),
+	label: text('label').default('My ESP32'),
+	created_at: timestamp('created_at').defaultNow().notNull(),
+})

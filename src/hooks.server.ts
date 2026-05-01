@@ -1,7 +1,8 @@
 import { createServerClient } from '@supabase/ssr'
+import { createClient } from '@supabase/supabase-js'
 import type { Handle } from '@sveltejs/kit'
 import { PUBLIC_SUPABASE_ANON_KEY, PUBLIC_SUPABASE_URL } from '$env/static/public'
-
+import { SUPABASE_SERVICE_ROLE_KEY } from '$env/static/private'
 
 
 export const handle: Handle = async ({ event, resolve }) => {
@@ -13,6 +14,11 @@ export const handle: Handle = async ({ event, resolve }) => {
             )
         }
     })
+
+    event.locals.supabaseAdmin = createClient(
+        PUBLIC_SUPABASE_URL,
+        SUPABASE_SERVICE_ROLE_KEY
+    )
 
     const { data: { session } } = await event.locals.supabase.auth.getSession()
 

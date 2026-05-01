@@ -74,6 +74,7 @@
 				<a href="/voice">Voice</a>
 				<a href="/calendar">Calendar</a>
 				<a href="/timeline">Timeline</a>
+				<a href="/connect">Connect</a>
 				<a href="/setting">Settings</a>
 			</div>
 

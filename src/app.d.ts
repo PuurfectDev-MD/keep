@@ -9,7 +9,8 @@ declare global {
 		interface Locals {
 			supabase: SupabaseClient,
 			session: Session | null,
-			user: User | null
+			user: User | null,
+			supabaseAdmin: SupabaseClient
 		}
 		// interface PageData {}
 		// interface PageState {}
