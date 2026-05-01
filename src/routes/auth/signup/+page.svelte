@@ -40,8 +40,8 @@
 	}
 </script>
 
-<div class="flex h-screen items-center justify-center">
-	<form onsubmit={handleSignUp} class="flex flex-col gap-y-8">
+<div class=" flex h-screen items-center justify-center">
+	<form onsubmit={handleSignUp} class="form-page flex flex-col gap-y-8">
 		<label>
 			username
 			<input bind:value={username} required type="text" />
@@ -67,6 +67,11 @@
 			<button type="button" class="cursor-pointer bg-amber-300 p-2">Google</button>
 		</div>
 	</form>
+</div>
+
+<div class=" flex justify-center gap-x-4">
+	<h4>Already have an account?</h4>
+	<a href="/auth/login">Login</a>
 </div>
 
 {#if errorMessage}

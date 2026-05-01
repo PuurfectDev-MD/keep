@@ -5,5 +5,5 @@ export function load({ locals }) {
         return redirect(303, `/${locals.user.id}`)
     }
 
-    return (null)
+
 }

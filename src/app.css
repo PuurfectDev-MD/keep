@@ -404,3 +404,9 @@ label {
   color: var(--color-text-secondary);
   letter-spacing: 0.5px;
 }
+
+.form-page label{
+  font-size: var(--text-2xl);
+  font-weight: 600;
+  
+}

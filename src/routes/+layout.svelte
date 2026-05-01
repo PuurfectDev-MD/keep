@@ -32,7 +32,7 @@
 </script>
 
 <div class="flex h-full max-h-[84px] w-full justify-between bg-[var(--color-nav-top-bg)] p-4">
-	<h3 class="px-2 text-white!">Keep</h3>
+	<h3 class="px-2"><a class="text-white!" href="/">Keep</a></h3>
 	<h3 class="px-4 text-[var(--color-text-muted)]!">Friday 27, 2026</h3>
 </div>
 
@@ -97,5 +97,9 @@
 		</main>
 	</div>
 {/if}
+
+<main class="flex-1 p-6 {data.user ? 'hidden' : ''}">
+	{@render children()}
+</main>
 
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>

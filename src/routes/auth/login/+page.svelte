@@ -26,7 +26,7 @@
 </script>
 
 <div class="flex h-screen items-center justify-center">
-	<form onsubmit={loginUser} class="flex flex-col gap-y-8">
+	<form onsubmit={loginUser} class="form-page flex flex-col gap-y-8">
 		<label>
 			Email:
 			<input bind:value={email} required type="email" />
@@ -43,6 +43,11 @@
 			<button type="button" class="cursor-pointer bg-amber-300 p-2">Google</button>
 		</div>
 	</form>
+</div>
+
+<div class=" flex justify-center gap-x-4">
+	<h4>Dont have an account?</h4>
+	<a href="/auth/signup">Signup</a>
 </div>
 
 {#if errorMessage}
