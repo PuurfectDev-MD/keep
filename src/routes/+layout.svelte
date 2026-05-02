@@ -7,6 +7,12 @@
 
 	import { DotsThreeOutlineVerticalIcon } from 'phosphor-svelte';
 	let { children, data } = $props();
+
+	const date = new Date().toLocaleDateString('en-US', {
+		weekday: 'long',
+		month: 'long',
+		day: '2-digit'
+	});
 	let themes = ['light', 'dark'];
 	let theme = $state(data.theme || 'light');
 
@@ -33,7 +39,7 @@
 
 <div class="flex h-full max-h-[84px] w-full justify-between bg-[var(--color-nav-top-bg)] p-4">
 	<h3 class="px-2"><a class="text-white!" href="/">Keep</a></h3>
-	<h3 class="px-4 text-[var(--color-text-muted)]!">Friday 27, 2026</h3>
+	<h3 class="px-4 text-[var(--color-text-muted)]!">{date}</h3>
 </div>
 
 {#if data.user}
@@ -43,10 +49,10 @@
 		>
 			<div class="w-full p-6">
 				<div class="relative flex justify-between">
-					<h3 class="text-xl">Good morning,</h3>
-					<div class="flex h-fit w-fit flex-col justify-end gap-y-8">
-						<button onclick={() => (userOptionsTab = !userOptionsTab)}
-							><DotsThreeOutlineVerticalIcon size={26}></DotsThreeOutlineVerticalIcon></button
+					<h3 class="text-xl">Good day,</h3>
+					<div class="flex h-fit w-fit flex-col justify-end gap-y-8 pl-4">
+						<button onclick={() => (userOptionsTab = !userOptionsTab)} class="py-1"
+							><DotsThreeOutlineVerticalIcon size={22}></DotsThreeOutlineVerticalIcon></button
 						>
 
 						{#if userOptionsTab}
@@ -62,10 +68,7 @@
 					</div>
 				</div>
 
-				<p>{data.user.email}</p>
-				<div class="flex justify-start pt-4">
-					<p class="w-fit bg-[var(--color-accent)] px-3 py-2 text-white">Wednesday</p>
-				</div>
+				<h2>{data.user.user_metadata.username}</h2>
 			</div>
 
 			<div class="nav-links grid grid-rows-1 gap-y-5 px-6 py-3">

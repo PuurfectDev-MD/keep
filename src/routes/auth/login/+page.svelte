@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import { supabase } from '$lib/supabase';
 	import { redirect } from '@sveltejs/kit';
 
@@ -20,6 +20,7 @@
 			errorMessage = error.message;
 			return;
 		} else {
+			await invalidateAll();
 			goto(`/${verifiedUser.user.id}`);
 		}
 	}
