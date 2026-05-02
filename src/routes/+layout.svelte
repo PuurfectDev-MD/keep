@@ -51,7 +51,7 @@
 				<div class="relative flex justify-between">
 					<h3 class="text-xl">Good day,</h3>
 					<div class="flex h-fit w-fit flex-col justify-end gap-y-8 pl-4">
-						<button onclick={() => (userOptionsTab = !userOptionsTab)} class="py-1"
+						<button onclick={() => (userOptionsTab = !userOptionsTab)} class="cursor-pointer py-1"
 							><DotsThreeOutlineVerticalIcon size={22}></DotsThreeOutlineVerticalIcon></button
 						>
 

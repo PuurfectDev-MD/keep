@@ -3,6 +3,7 @@
 	import { supabase } from '$lib/supabase.js';
 
 	let { data } = $props();
+	let message = $state('');
 	let confirmPass = $state('');
 	let errorMessage = $state('');
 	let username = $state('');
@@ -37,7 +38,7 @@
 			console.log(error.message);
 			return;
 		}
-		goto('/auth/verify');
+		message = 'Check your email!';
 	}
 </script>
 
@@ -85,6 +86,9 @@
 				class="h-12 w-12 animate-spin rounded-full border-4 border-amber-300 border-t-transparent"
 			></div>
 			<p class="font-medium text-black">Give me a moment ....</p>
+			{#if message}
+				<h4>{message}</h4>
+			{/if}
 		</div>
 	</div>
 {/if}
