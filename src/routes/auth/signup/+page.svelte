@@ -26,7 +26,8 @@
 			options: {
 				data: {
 					username: username // for user.meta_data.username
-				}
+				},
+				emailRedirectTo: 'https://keeplife.vercel.app/auth/verify'
 			}
 		});
 		console.log('Got the response fromthe db');
