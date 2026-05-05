@@ -1,13 +1,26 @@
 <script lang="ts">
 	import { goto, invalidateAll } from '$app/navigation';
 	import { supabase } from '$lib/supabase';
-	import { redirect } from '@sveltejs/kit';
 
 	let { data } = $props();
+
+	import { GoogleLogoIcon } from 'phosphor-svelte';
 	let errorMessage = $state('');
 	let loggingIn = $state(false);
 	let email = $state('');
 	let password = $state('');
+
+	async function handleGoogleAuth() {
+		const { error } = await supabase.auth.signInWithOAuth({
+			provider: 'google',
+			options: {
+				// This is where Supabase sends the code after Google is done
+				redirectTo: `${window.location.origin}/auth/callback`
+			}
+		});
+
+		if (error) console.error('Auth error:', error.message);
+	}
 
 	async function loginUser() {
 		loggingIn = true;
@@ -41,14 +54,20 @@
 		<div class="flex flex-col gap-y-3">
 			<button type="submit" class="cursor-pointer bg-amber-300 p-2">SignUp</button>
 			<hr class="my-5 bg-red-500" />
-			<button type="button" class="cursor-pointer bg-amber-300 p-2">Google</button>
+			<button
+				onclick={() => handleGoogleAuth()}
+				type="button"
+				class=" cursor-pointer bg-amber-300 p-2 pl-[45%]"
+			>
+				<GoogleLogoIcon size={28}></GoogleLogoIcon>
+			</button>
 		</div>
 	</form>
 </div>
 
-<div class=" flex justify-center gap-x-4">
+<div class="absolute inset-x-0 bottom-5 flex justify-center gap-x-4">
 	<h4>Dont have an account?</h4>
-	<a href="/auth/signup">Signup</a>
+	<a href="/auth/signup" class="py-1">Signup</a>
 </div>
 
 {#if errorMessage}

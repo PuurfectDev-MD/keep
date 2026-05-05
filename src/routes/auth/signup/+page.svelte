@@ -1,6 +1,7 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
 	import { supabase } from '$lib/supabase.js';
+
+	import { GoogleLogoIcon } from 'phosphor-svelte';
 
 	let { data } = $props();
 	let message = $state('');
@@ -10,6 +11,20 @@
 	let password = $state('');
 	let email = $state('');
 	let signingIn = $state(false);
+
+	async function signInWithGoogle() {
+		const { error } = await supabase.auth.signInWithOAuth({
+			provider: 'google',
+			options: {
+				redirectTo: `${window.location.origin}/auth/callback` //make sure to define this url in google console authorized redirects section
+			}
+		});
+		if (error) {
+			errorMessage = 'There was an error signinig you in';
+			console.log(error.message);
+			return;
+		}
+	}
 
 	async function handleSignUp(e: SubmitEvent) {
 		errorMessage = '';
@@ -43,7 +58,7 @@
 </script>
 
 <div class=" flex h-screen items-center justify-center">
-	<form onsubmit={handleSignUp} class="form-page flex flex-col gap-y-8">
+	<form onsubmit={handleSignUp} class="form-page flex h-fit flex-col gap-y-6">
 		<label>
 			username
 			<input bind:value={username} required type="text" />
@@ -63,17 +78,23 @@
 			Confirm Password:
 			<input required bind:value={confirmPass} />
 		</label>
-		<div class="flex flex-col gap-y-3">
+		<div class="flex flex-col gap-y-2">
 			<button type="submit" class="cursor-pointer bg-amber-300 p-2">SignUp</button>
 			<hr class="my-5 bg-red-500" />
-			<button type="button" class="cursor-pointer bg-amber-300 p-2">Google</button>
+			<button
+				onclick={() => signInWithGoogle()}
+				type="button"
+				class="cursor-pointer bg-amber-300 p-2 pl-[45%]"
+			>
+				<GoogleLogoIcon size={28}></GoogleLogoIcon>
+			</button>
 		</div>
 	</form>
 </div>
 
-<div class=" flex justify-center gap-x-4">
+<div class="inset-x-0 flex justify-center gap-x-4">
 	<h4>Already have an account?</h4>
-	<a href="/auth/login">Login</a>
+	<a href="/auth/login" class="py-1">Login</a>
 </div>
 
 {#if errorMessage}

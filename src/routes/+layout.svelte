@@ -6,6 +6,7 @@
 	import { goto, invalidateAll } from '$app/navigation';
 
 	import { DotsThreeOutlineVerticalIcon } from 'phosphor-svelte';
+	import { onMount } from 'svelte';
 	let { children, data } = $props();
 
 	const date = new Date().toLocaleDateString('en-US', {
@@ -35,6 +36,24 @@
 			goto(`/`);
 		}
 	}
+
+	onMount(() => {
+		let currentUserId: string | null = null;
+		const {
+			data: { subscription }
+		} = supabase.auth.onAuthStateChange((event, session) => {
+			// When the callback finishes and the user is 'SIGNED_IN',
+			// this triggers and refreshes all your server-side load functions.
+
+			const newUserId = session?.user?.id ?? null;
+			if (newUserId !== currentUserId) {
+				currentUserId = newUserId;
+				invalidateAll();
+			}
+		});
+
+		return () => subscription.unsubscribe();
+	});
 </script>
 
 <div class="flex h-full max-h-[84px] w-full justify-between bg-[var(--color-nav-top-bg)] p-4">
