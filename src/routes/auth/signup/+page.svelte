@@ -92,11 +92,6 @@
 	</form>
 </div>
 
-<div class="inset-x-0 flex justify-center gap-x-4">
-	<h4>Already have an account?</h4>
-	<a href="/auth/login" class="py-1">Login</a>
-</div>
-
 {#if errorMessage}
 	<h3 class="absolute top-5 right-5 bg-amber-700">{errorMessage}</h3>
 {/if}

@@ -58,7 +58,30 @@
 
 <div class="flex h-full max-h-[84px] w-full justify-between bg-[var(--color-nav-top-bg)] p-4">
 	<h3 class="px-2"><a class="text-white!" href="/">Keep</a></h3>
-	<h3 class="px-4 text-[var(--color-text-muted)]!">{date}</h3>
+
+	{#if data.user?.id}
+		<h3 class="px-4 text-[var(--color-text-muted)]!">{date}</h3>
+	{:else}
+		<div class="flex gap-x-4">
+			<div class="px-1/4 flex gap-x-4 py-1">
+				<div class="theme-selector px-3 py-1">
+					<select
+						bind:value={theme}
+						onchange={(e) => {
+							saveTheme(e.currentTarget.value);
+						}}
+					>
+						{#each themes as t}
+							<option value={t}>{t}</option>
+						{/each}
+					</select>
+				</div>
+				<a href="/about" class="text-[1.25rem]">About</a>
+			</div>
+			<a class="border-r-2 px-2 text-2xl" href="/auth/signup">Signup</a>
+			<a class="text-2xl" href="/auth/login">Login</a>
+		</div>
+	{/if}
 </div>
 
 {#if data.user}
