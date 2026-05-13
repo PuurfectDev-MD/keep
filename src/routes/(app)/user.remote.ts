@@ -1,4 +1,4 @@
-import { getRequestEvent, query } from "$app/server";
+import { command, getRequestEvent, query } from "$app/server";
 import * as v from 'valibot'
 
 
@@ -129,3 +129,69 @@ async function fetchMemoryUrls(supabase: any, userId: string, memoryId: string) 
     return { type: "success" as const, urls: Imgurls }
 
 }
+
+
+
+export const getUserStats = query(v.string(), async (id) => {
+    const event = getRequestEvent()
+    const memoriesCount = event.locals.supabase.from("memory").select("*", { count: "exact", head: true }).eq("user_id", id)
+    const voiceDiaryCount = event.locals.supabase.from("voiceDiary").select("*", { count: "exact", head: true }).eq("user_id", id)
+    const streakData = event.locals.supabase.from("streak").select("*").eq("user_id", id).single()
+
+    const [memoriesResult, voiceResult, streakResult] = await Promise.all([memoriesCount, voiceDiaryCount, streakData])
+
+    if (memoriesResult.error || voiceResult.error || streakResult.error) {
+        console.log(memoriesResult.error?.message)
+        console.log(voiceResult.error?.message)
+        console.log(streakResult.error?.message)
+        return { type: "db_error", message: "There was an error fetching your data" }
+    }
+
+    return {
+        type: "success",
+        memoriesCount: memoriesResult.count,
+        voiceDiaryCount: voiceResult.count,
+        streak: streakResult.data
+    }
+})
+
+
+
+export const updateStreak = command(v.string(), async (userId) => {
+    const event = getRequestEvent()
+    const db = event.locals.supabase
+
+    const today = new Date()
+
+    const yesterday = new Date(today)
+    yesterday.setDate(yesterday.getDate() - 1)
+
+    const getCurrentStreak = await db.from("streak").select("*").eq("user_id", userId).single()
+    if (getCurrentStreak.error) {
+        console.log(getCurrentStreak.error.message)
+        return { type: "db_error" as const, message: "There was an error fetching streak data" }
+    }
+    console.log("Got the current streak as: ", getCurrentStreak.data.currentStreak)
+
+    if (getCurrentStreak.data.lastUpdated < today.toISOString()) {
+        console.log("Updating streak")
+        const updateStreak = await db.from("streak").update({ streak: (getCurrentStreak.data.currentStreak + 1).toString(), lastUpdated: today.toISOString() }).eq("user_id", userId)
+        if (updateStreak.error) {
+            console.log(updateStreak.error.message)
+            return { type: "db_error" as const, message: "There was an error updating streak data" }
+        }
+
+        if (getCurrentStreak.data.currentStreak + 1 > getCurrentStreak.data.longestStreak) {
+            console.log("Updating longest streak")
+            const updateLongestStreak = await db.from("streak").update({ longestStreak: (getCurrentStreak.data.currentStreak + 1).toString() }).eq("user_id", userId)
+
+            if (updateLongestStreak.error) {
+                console.log(updateLongestStreak.error.message)
+                return { type: "db_error" as const, message: "There was an error updating longest streak data" }
+            }
+        }
+
+        console.log("All done")
+    }
+
+})

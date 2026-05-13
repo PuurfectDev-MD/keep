@@ -1,4 +1,5 @@
 import { json } from '@sveltejs/kit'
+import { updateStreak } from './../../(app)/user.remote.js'
 
 export async function POST(event) {
     const { data: { session } } = await event.locals.supabase.auth.getSession()
@@ -6,13 +7,14 @@ export async function POST(event) {
 
 
     const supabase = event.locals.supabase
-    const { filePath, voiceDiaryId } = await event.request.json()
+    const { filePath, voiceDiaryId, title } = await event.request.json()
 
     const userId = session.user.id
     const { error: dbError } = await supabase.from('voiceDiary').insert({
         id: voiceDiaryId,
         user_id: userId,
-        audio: filePath
+        audio: filePath,
+        title
     })
 
     if (dbError) {
@@ -20,6 +22,8 @@ export async function POST(event) {
         return json({ error: 'Failed try again.' }, { status: 500 })
 
     }
+
+    const streakUpdate = await updateStreak(userId)
 
     return json({ success: true })
 

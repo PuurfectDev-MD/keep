@@ -25,9 +25,11 @@
 	</div>
 
 	<div class="flex justify-center gap-x-5 p-10">
-		<button class="btn-primary">Start your Keeping</button>
+		<button class="btn-primary" onclick={() => (window.location.href = '/auth/signup')}
+			>Start your Keeping</button
+		>
 		<div class="flex gap-x-0.5">
-			<a href="/" class="py-1">Check out how it works </a>
+			<a href="/about" class="py-1">Check out how it works </a>
 			<ArrowUpRightIcon size={20}></ArrowUpRightIcon>
 		</div>
 	</div>

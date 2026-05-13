@@ -52,7 +52,7 @@
 		</label>
 
 		<div class="flex flex-col gap-y-3">
-			<button type="submit" class="cursor-pointer bg-amber-300 p-2">SignUp</button>
+			<button type="submit" class="cursor-pointer bg-amber-300 p-2">Login</button>
 			<hr class="my-5 bg-red-500" />
 			<button
 				onclick={() => handleGoogleAuth()}

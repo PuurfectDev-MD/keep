@@ -142,7 +142,15 @@
 {/if}
 
 {#if errorMessage}
-	<div class="absolute top-5 right-5 h-[100px] bg-blue-400">
-		<p>{errorMessage}</p>
+	<div class="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm">
+		<div class="flex flex-col items-center gap-4 rounded bg-[var(--color-bg-secondary)] p-4">
+			<p class="font-medium text-[var(--color-accent)]!">{errorMessage}</p>
+			<button
+				class=" cursor-pointer rounded px-4 py-1 font-medium"
+				onclick={() => (errorMessage = '')}
+			>
+				Close
+			</button>
+		</div>
 	</div>
 {/if}

@@ -24,6 +24,7 @@ export const memory = pgTable('memory', {
 
 export const voiceDaiary = pgTable('voiceDiary', {
 	id: uuid('id').primaryKey().notNull(),
+	title: text('title').notNull().default((new Date().toISOString()).split('T')[0]),
 	audio: text('audio').notNull(),
 	userId: uuid('user_id').notNull().references(() => users.id),
 	created_at: timestamp('created_at').defaultNow().notNull(),
@@ -36,4 +37,11 @@ export const deviceKeys = pgTable('device_keys', {
 	rawKey: text('raw_key').notNull().unique(),
 	label: text('label').default('My ESP32'),
 	created_at: timestamp('created_at').defaultNow().notNull(),
+})
+
+export const streak = pgTable('streak', {
+	userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }).primaryKey(),
+	currentStreak: text('current_streak').notNull().default("0"),
+	longestStreak: text('longest_streak').notNull().default("0"),
+	lastUpdated: timestamp('last_updated').defaultNow().notNull(),
 })

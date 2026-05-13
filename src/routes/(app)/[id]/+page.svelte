@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { getUserDashboardInfo } from '../user.remote';
+	import { getUserDashboardInfo, getUserStats } from '../user.remote';
 
 	let { data } = $props();
 	const dashboardInfo = getUserDashboardInfo(data.user.id);
@@ -9,24 +9,29 @@
 	<h1>Your Life At A Glance</h1>
 </div>
 <hr />
-<div class="grid grid-cols-4 gap-x-4">
-	<div class="card">
-		<h1 class="text-4xl">XY</h1>
-		<h3>Memories</h3>
+
+{#await getUserStats(data.user.id)}
+	<p>Loading...</p>
+{:then result}
+	<div class="grid grid-cols-4 gap-x-4">
+		<div class="card">
+			<h1 class="text-4xl">{result.memoriesCount}</h1>
+			<h3>Memories</h3>
+		</div>
+		<div class="card">
+			<h1 class="text-4xl">{result.voiceDiaryCount}</h1>
+			<h3>Voice Logs</h3>
+		</div>
+		<div class="card">
+			<h1 class="text-4xl">{result.streak.currentStreak}</h1>
+			<h3>Streak</h3>
+		</div>
+		<div class="card">
+			<h1 class="text-4xl">XY</h1>
+			<h3>Active Days</h3>
+		</div>
 	</div>
-	<div class="card">
-		<h1 class="text-4xl">XY</h1>
-		<h3>Voice Logs</h3>
-	</div>
-	<div class="card">
-		<h1 class="text-4xl">XY</h1>
-		<h3>Streak</h3>
-	</div>
-	<div class="card">
-		<h1 class="text-4xl">XY</h1>
-		<h3>Active Days</h3>
-	</div>
-</div>
+{/await}
 
 {#await dashboardInfo}
 	<p>Loading</p>
